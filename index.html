@@ -1,142 +1,229 @@
 <!DOCTYPE html>
-<html lang="ru" class="dark">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Учет займов CRM</title>
+    <title>Мои займы</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#0f172a',
-                        cardBg: '#1e293b',
-                        accentBlue: '#3b82f6',
-                    }
-                }
-            }
-        }
-    </script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen p-3 space-y-4 pb-10">
+<body class="bg-[#f2f4f8] text-gray-800 min-h-screen pb-24">
 
-    <div class="flex items-center justify-between bg-slate-800/80 p-3 rounded-2xl border border-slate-700/50 backdrop-blur shadow-lg">
-        <div class="flex items-center gap-2">
-            <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold">
-                <i class="fa-solid fa-wallet text-lg"></i>
-            </div>
-            <div>
-                <h1 class="text-sm font-bold leading-tight">МикроЗаймы CRM</h1>
-                <p class="text-[10px] text-slate-400">Управление договорами</p>
-            </div>
-        </div>
-        <span class="px-2.5 py-1 text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">Онлайн</span>
+    <div class="px-4 pt-4 pb-2 flex justify-between items-center bg-[#f2f4f8] sticky top-0 z-10">
+        <h1 class="text-xl font-bold text-gray-900">Мои <span class="text-[#22c55e]">займы</span></h1>
+        <button class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-gray-500 shadow-sm border border-gray-100">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        </button>
     </div>
 
-    <div class="grid grid-cols-2 gap-2.5">
-        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700/60 shadow-md">
-            <div class="text-[11px] text-slate-400 font-medium mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-coins text-amber-400"></i> В обороте
+    <div id="tab-main" class="px-4 space-y-4">
+        <div class="grid grid-cols-3 gap-2">
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100/80 text-center">
+                <div class="text-xs font-bold text-gray-900">71 738 ₽</div>
+                <div class="text-[10px] text-gray-400 mt-0.5">В портфеле</div>
             </div>
-            <div class="text-lg font-bold text-white tracking-tight">12 500 <span class="text-xs font-semibold text-slate-400">BYN</span></div>
-        </div>
-        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700/60 shadow-md">
-            <div class="text-[11px] text-slate-400 font-medium mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-chart-line text-emerald-400"></i> Ожид. прибыль
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100/80 text-center">
+                <div class="text-xs font-bold text-red-500">18 280 ₽</div>
+                <div class="text-[10px] text-gray-400 mt-0.5">Просрочка</div>
             </div>
-            <div class="text-lg font-bold text-emerald-400 tracking-tight">+1 850 <span class="text-xs font-semibold text-emerald-600">BYN</span></div>
-        </div>
-        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700/60 shadow-md">
-            <div class="text-[11px] text-slate-400 font-medium mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-clock-rotate-left text-blue-400"></i> Ближайшие возвраты
-            </div>
-            <div class="text-base font-bold text-blue-400">3 договора</div>
-        </div>
-        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700/60 shadow-md">
-            <div class="text-[11px] text-slate-400 font-medium mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-gavel text-rose-400"></i> В суде
-            </div>
-            <div class="text-base font-bold text-slate-400">0,00 <span class="text-xs font-normal">BYN</span></div>
-        </div>
-    </div>
-
-    <div class="flex gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
-        <button class="px-3.5 py-2 rounded-xl bg-blue-600 text-white font-medium whitespace-nowrap shadow-sm">Все (18)</button>
-        <button class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">Активные (15)</button>
-        <button class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">Претензии (0)</button>
-        <button class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">В суде (3)</button>
-    </div>
-
-    <div class="space-y-3">
-        <div class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Активные договоры</div>
-        
-        <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700/80 shadow-lg space-y-3">
-            <div class="flex justify-between items-start border-b border-slate-700/50 pb-2.5">
-                <div>
-                    <div class="text-sm font-bold text-white flex items-center gap-2">
-                        Договор №104
-                        <span class="px-2 py-0.5 text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">Активен</span>
-                    </div>
-                    <div class="text-[11px] text-slate-400 mt-0.5">Выдан: 20.08.2026</div>
-                </div>
-                <div class="text-right">
-                    <div class="text-sm font-bold text-blue-400">500 BYN</div>
-                    <div class="text-[10px] text-slate-400">2.4% / день</div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-900/50 p-2.5 rounded-xl border border-slate-800">
-                <div>
-                    <span class="text-slate-400 block text-[10px]">К возврату:</span>
-                    <span class="font-bold text-emerald-400">740 BYN</span>
-                </div>
-                <div>
-                    <span class="text-slate-400 block text-[10px]">Срок (дней):</span>
-                    <span class="font-semibold text-slate-200">20 дней</span>
-                </div>
-            </div>
-
-            <div class="flex gap-2 pt-1">
-                <button onclick="alert('Досудебная претензия отправлена')" class="flex-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 py-2 rounded-xl text-xs font-medium transition">
-                    <i class="fa-solid fa-file-contract mr-1"></i> Претензия
-                </button>
-                <button onclick="alert('Передано в суд')" class="flex-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2 rounded-xl text-xs font-medium transition">
-                    <i class="fa-solid fa-gavel mr-1"></i> В суд
-                </button>
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100/80 text-center">
+                <div class="text-xs font-bold text-[#22c55e]">+39 560,09 ₽</div>
+                <div class="text-[10px] text-gray-400 mt-0.5">Прибыль</div>
             </div>
         </div>
-    </div>
 
-    <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
-        <div class="text-sm font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle text-blue-400"></i> Новый займ
-        </div>
-        <form class="space-y-2.5" onsubmit="event.preventDefault(); alert('Договор успешно добавлен!');">
-            <input type="text" placeholder="Номер договора" class="w-full bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500" required>
-            
-            <div class="grid grid-cols-2 gap-2">
-                <input type="number" placeholder="Сумма (BYN)" class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500" required>
-                <input type="number" placeholder="Срок (дней)" value="20" class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500">
-            </div>
-
-            <div class="grid grid-cols-2 gap-2">
-                <input type="text" placeholder="% в день" value="2.4%" class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500">
-                <input type="text" placeholder="Пеня в день" value="2.77%" class="bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500">
-            </div>
-
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white py-2.5 rounded-xl text-xs font-bold shadow-lg shadow-blue-600/30 transition">
-                Сохранить договор
+        <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 text-xs font-semibold">
+            <button class="px-3.5 py-2 rounded-full bg-[#22c55e] text-white flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                Ближайшие <span class="bg-white/30 text-white px-1.5 py-0.5 rounded-full text-[10px]">3</span>
             </button>
-        </form>
+            <button class="px-3.5 py-2 rounded-full bg-white text-gray-600 border border-gray-200/80 flex items-center gap-1.5 whitespace-nowrap">
+                Активные <span class="bg-red-500 text-white px-1.5 py-0.5 rounded-full text-[10px]">77</span>
+            </button>
+            <button class="px-3.5 py-2 rounded-full bg-white text-gray-600 border border-gray-200/80 flex items-center gap-1.5 whitespace-nowrap">
+                Просрочка <span class="bg-red-500 text-white px-1.5 py-0.5 rounded-full text-[10px]">46</span>
+            </button>
+        </div>
+
+        <div class="space-y-3">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden space-y-2">
+                <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-400"></div>
+                <div class="flex justify-between items-center pl-1">
+                    <span class="text-lg font-bold text-gray-900">400 ₽</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-700">● Истекает</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs pl-1">
+                    <div>
+                        <div class="text-[10px] text-gray-400">Заёмщик</div>
+                        <div class="font-bold text-gray-800 uppercase text-[11px] leading-tight">ЧЕКАНОВА ЕКАТЕРИНА ВАЛЕНТИНОВНА</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-gray-400">Ставка</div>
+                        <div class="font-bold text-gray-800 text-[11px]">2.0%/день</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-gray-400">Срок</div>
+                        <div class="font-bold text-gray-800 text-[11px]">5 дн.</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-gray-400">К возврату</div>
+                        <div class="font-bold text-gray-800 text-[11px]">440 ₽</div>
+                    </div>
+                </div>
+                <div class="pt-2 border-t border-gray-50 flex justify-between items-center pl-1 text-[11px]">
+                    <span class="text-gray-400">Сегодня</span>
+                    <span class="font-bold text-[#22c55e]">+12,8 ₽</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden space-y-2">
+                <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-400"></div>
+                <div class="flex justify-between items-center pl-1">
+                    <span class="text-lg font-bold text-gray-900">900 ₽</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-700">● Истекает</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs pl-1">
+                    <div>
+                        <div class="text-[10px] text-gray-400">Заёмщик</div>
+                        <div class="font-bold text-gray-800 uppercase text-[11px] leading-tight">КУДРЯШОВ ДЕНИС ДМИТРИЕВИЧ</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-gray-400">Ставка</div>
+                        <div class="font-bold text-gray-800 text-[11px]">1.8%/день</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-gray-400">Срок</div>
+                        <div class="font-bold text-gray-800 text-[11px]">25 дн.</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-gray-400">К возврату</div>
+                        <div class="font-bold text-gray-800 text-[11px]">1 305 ₽</div>
+                    </div>
+                </div>
+                <div class="pt-2 border-t border-gray-50 flex justify-between items-center pl-1 text-[11px]">
+                    <span class="text-gray-400">Сегодня</span>
+                    <span class="font-bold text-[#22c55e]">+287,1 ₽</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-stats" class="px-4 space-y-4 hidden">
+        <h2 class="text-base font-bold text-gray-900">Статистика</h2>
+
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-2">
+            <div class="text-xs font-bold text-gray-800">Динамика прибыли и просрочки</div>
+            <div class="h-36">
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+            <div class="text-xs font-bold text-gray-800">Портфель</div>
+            <div class="w-36 h-36 mx-auto">
+                <canvas id="doughnutChart"></canvas>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[10px] font-semibold text-gray-600 pt-2">
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#22c55e]"></span> Активные</div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Просрочка</div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Закрытые</div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Истекают</div>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-2">
+            <div class="text-xs font-bold text-gray-800 mb-2">Прогноз поступлений (7 дней)</div>
+            <div class="divide-y divide-gray-100 text-xs">
+                <div class="py-2 flex justify-between items-center"><span class="text-gray-500">16.08.2026</span><span class="text-gray-400">5</span><span class="font-bold text-[#22c55e]">1 993 ₽</span></div>
+                <div class="py-2 flex justify-between items-center"><span class="text-gray-500">17.08.2026</span><span class="text-gray-400">4</span><span class="font-bold text-[#22c55e]">1 571 ₽</span></div>
+                <div class="py-2 flex justify-between items-center"><span class="text-gray-500">18.08.2026</span><span class="text-gray-400">5</span><span class="font-bold text-[#22c55e]">1 982 ₽</span></div>
+                <div class="py-2 flex justify-between items-center"><span class="text-gray-500">19.08.2026</span><span class="text-gray-400">6</span><span class="font-bold text-[#22c55e]">3 145 ₽</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-profile" class="px-4 space-y-4 hidden">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center space-y-2">
+            <div class="w-16 h-16 bg-emerald-100 text-[#22c55e] rounded-full mx-auto flex items-center justify-center text-2xl font-bold">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <h3 class="font-bold text-gray-900">Администратор</h3>
+            <p class="text-xs text-gray-400">Управление микрозаймами</p>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200/60 py-2 px-6 flex justify-around items-center z-50">
+        <button onclick="switchTab('main')" id="nav-main" class="flex flex-col items-center gap-1 text-[#22c55e]">
+            <div class="relative">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="absolute -top-1.5 -right-2.5 bg-red-500 text-white text-[9px] font-bold px-1 rounded-full">46</span>
+            </div>
+            <span class="text-[10px] font-medium">Главная</span>
+        </button>
+
+        <button onclick="switchTab('stats')" id="nav-stats" class="flex flex-col items-center gap-1 text-gray-400">
+            <i class="fa-solid fa-chart-simple text-lg"></i>
+            <span class="text-[10px] font-medium">Статистика</span>
+        </button>
+
+        <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center gap-1 text-gray-400">
+            <i class="fa-regular fa-user text-lg"></i>
+            <span class="text-[10px] font-medium">Профиль</span>
+        </button>
     </div>
 
     <script>
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
+
+        function switchTab(tab) {
+            document.getElementById('tab-main').classList.add('hidden');
+            document.getElementById('tab-stats').classList.add('hidden');
+            document.getElementById('tab-profile').classList.add('hidden');
+
+            document.getElementById('nav-main').className = "flex flex-col items-center gap-1 text-gray-400";
+            document.getElementById('nav-stats').className = "flex flex-col items-center gap-1 text-gray-400";
+            document.getElementById('nav-profile').className = "flex flex-col items-center gap-1 text-gray-400";
+
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('nav-' + tab).className = "flex flex-col items-center gap-1 text-[#22c55e]";
+        }
+
+        // Инициализация диаграмм
+        window.onload = function() {
+            const ctx1 = document.getElementById('lineChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['01', '05', '10', '15', '20', '25', '30'],
+                    datasets: [
+                        { label: 'Прибыль', data: [1200, 1900, 800, 1500, 2200, 1100, 2500], borderColor: '#22c55e', tension: 0.4, borderWidth: 2, pointRadius: 0 },
+                        { label: 'Просрочка', data: [400, 300, 600, 200, 900, 400, 300], borderColor: '#ef4444', tension: 0.4, borderWidth: 2, pointRadius: 0 }
+                    ]
+                },
+                options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctx2 = document.getElementById('doughnutChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Активные', 'Просрочка', 'Закрытые', 'Истекают'],
+                    datasets: [{
+                        data: [45, 20, 30, 5],
+                        backgroundColor: ['#22c55e', '#ef4444', '#3b82f6', '#fbbf24'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, cutout: '70%', responsive: true, maintainAspectRatio: false }
+            });
+        };
     </script>
 </body>
 </html>
