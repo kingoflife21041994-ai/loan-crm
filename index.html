@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>МикроЗаймы CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans p-4">
+    <div class="max-w-md mx-auto space-y-4">
+        <h1 class="text-xl font-bold text-blue-400">📊 МикроЗаймы CRM</h1>
+        
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-gray-800 p-3 rounded-lg border border-gray-700">
+                <p class="text-xs text-gray-400">В обороте</p>
+                <p class="text-lg font-bold text-green-400">12 500 BYN</p>
+            </div>
+            <div class="bg-gray-800 p-3 rounded-lg border border-gray-700">
+                <p class="text-xs text-gray-400">Ожид. прибыль</p>
+                <p class="text-lg font-bold text-yellow-400">1 850 BYN</p>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 space-y-2">
+            <div class="flex justify-between text-sm">
+                <span>Активные займы:</span>
+                <span class="font-bold text-green-400">15</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span>Претензии (досудебные):</span>
+                <span class="font-bold text-orange-400">4</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span>В суде:</span>
+                <span class="font-bold text-red-400">3</span>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+            <h2 class="text-sm font-bold mb-3 text-gray-300">Добавить новый займ</h2>
+            <form class="space-y-3" onsubmit="event.preventDefault(); alert('Займ сохранен!');">
+                <input type="text" placeholder="Номер договора" class="w-full bg-gray-700 p-2 rounded text-sm outline-none" required>
+                <input type="number" placeholder="Сумма (BYN)" class="w-full bg-gray-700 p-2 rounded text-sm outline-none" required>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" placeholder="Срок (дней)" value="20" class="bg-gray-700 p-2 rounded text-sm outline-none">
+                    <input type="text" placeholder="Ставка (%)" value="2.4%" class="bg-gray-700 p-2 rounded text-sm outline-none">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded text-sm font-bold">Сохранить займ</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+    </script>
+</body>
+</html>
